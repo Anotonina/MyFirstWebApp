@@ -1,0 +1,50 @@
+﻿@model MyFirstWebApp.Models.ShopModel
+@{
+    ViewData["Title"] = "AddShops";
+}
+
+@using(Html.BeginForm("AddShops", "Home",FormMethod.Post ))
+{
+   
+    <p>
+        <label>Название магазина</label><br/>
+        @Html.TextBox("ShopName")
+        <span asp-validation-for="ShopName" class="text-danger"></span>
+    </p>
+
+    <p>
+        <label>Скидка в магазине</label><br/>
+        @Html.TextBox("Sale", " ", new{ type = "number"})
+         <span asp-validation-for="Sale" class="text-danger"></span>
+    </p>
+
+    <p>
+        <input type = "submit" value="Отправить"/>
+    </p>
+}
+
+<div class="container">
+
+    @if (ViewBag.shops != null && ViewBag.shops.Count >=1)
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Магазин</th>
+                    <th scope="col">Скидка</th>
+                </tr>
+            </thead>
+        
+        <tbody>
+            @foreach (var shop in ViewBag.shops)            
+           {
+               <tr>
+              <td>@shop.ShopName</td> 
+              <td>@shop.Sale</td>\
+              </tr>
+              
+           }
+        </tbody>
+        </table>
+    }
+</div>
