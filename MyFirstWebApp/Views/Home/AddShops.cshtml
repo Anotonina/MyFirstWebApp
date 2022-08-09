@@ -1,50 +1,112 @@
-﻿@model MyFirstWebApp.Models.ShopModel
+﻿@using MyFirstWebApp.Helpers
+@model MyFirstWebApp.Models.IndexViewModel
+
+@section Scripts{
+<script>
+    let model = @Json.Serialize(Model);
+</script>
+<script src="~/js/addShops.js" asp-append-version="true"></script>
+<script src="~/js/addCashiers.js" asp-append-version="true"></script>
+
+}
+
 @{
     ViewData["Title"] = "AddShops";
 }
-
-@using(Html.BeginForm("AddShops", "Home",FormMethod.Post ))
+<h2>@ViewData["Title"]</h2>
+@using (Html.BeginForm("AddShops", "Home", FormMethod.Post))
 {
    
     <p>
-        <label>Название магазина</label><br/>
+        <label>Название магазина</label><br />
         @Html.TextBox("ShopName")
-        <span asp-validation-for="ShopName" class="text-danger"></span>
+        <span for="ShopName" class="text-danger"></span>
     </p>
 
     <p>
-        <label>Скидка в магазине</label><br/>
+        <label>Скидка в магазине</label><br />
         @Html.TextBox("Sale", " ", new{ type = "number"})
-         <span asp-validation-for="Sale" class="text-danger"></span>
+        <span for="Sale" class="text-danger"></span>
     </p>
 
     <p>
-        <input type = "submit" value="Отправить"/>
+        <button type="button" id="reset" onclick="onClick()">Отправить</button>
     </p>
+
 }
 
-<div class="container">
 
-    @if (ViewBag.shops != null && ViewBag.shops.Count >=1)
-    {
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">Магазин</th>
-                    <th scope="col">Скидка</th>
-                </tr>
-            </thead>
-        
+<h1>Ваши магазины со скидками</h1>
+
+ <div class="container">
+        <form method = "get" action= "/Home/GetShopsForm" >
+            <input type="hidden" name="page" value="1"/>
+            <div class="form-inline form-group">
+                @Html.ValidationSummary()
+                <label class="control-lable">Магазин&nbsp</label>
+                <input name="ShopNameFiltr"  class="form-control" value='@Model.Filter.ShopNameFiltr'/>
+                
+                 <label class="control-lable">&nbspСкидка от&nbsp&nbsp</label>
+                <input name="SaleFrom" class="form-control" value='@Model.Filter.SaleFrom'/>
+
+                <label class="control-lable">&nbspСкидка до&nbsp&nbsp</label>
+                <input name="SaleTo" class="form-control" value='@Model.Filter.SaleTo'/>
+
+                <input type="submit" value="Фильтр" class = "btn btn-default"/>                
+            </div>
+        </form>
+
+
+
+
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <p>Магазин</p>
+                    <button type="button" onclick="bubbleSort('shopName', this)"> Сортировать </button>
+
+                </th>
+                <th scope="col">
+                    <p>Скидка</p>
+                    <button type="button" onclick="bubbleSort('sale', this)">Сортировать</button>
+
+                </th>
+                <th scope="col">
+                    <p >Выбранные магазины </p>
+                     
+                    <button type="button"id="result" onclick="onClickDelete()" >Удалить: <span>0</span> </button>
+                    <p>
+		              <label class="text-success"><input type="checkbox" id="checkbox"> Отметить/cнять все</label>
+	                </p>
+                   
+                </th>
+            </tr>
+        </thead>
+
         <tbody>
-            @foreach (var shop in ViewBag.shops)            
-           {
-               <tr>
-              <td>@shop.ShopName</td> 
-              <td>@shop.Sale</td>\
-              </tr>
-              
-           }
+            @foreach (var shop in Model.Shops)
+            {
+                <tr>                                      
+                    <td><a href="/Cashiers/Index/@shop.Id">@shop.ShopName</a></td>
+                    <td>@shop.Sale</td>
+                    <td> 
+                        <p class="controls">
+                       <input type="checkbox" onclick="selectedCheckbox()" class="needCheck" name="checkShop" value="@shop.Id" id="check" />
+                       </p>
+                    </td>
+                </tr>
+
+            }
         </tbody>
-        </table>
-    }
+    </table>
+
 </div>
+<br />
+<div id="helper" class="btn-group" >
+    @Html.PageLinks(Model.PageInfo,  x => Url.Action("AddShops",  new { Page = x, ShopNameFiltr=Model.Filter.ShopNameFiltr,  SaleFrom = Model.Filter.SaleFrom, SaleTo = Model.Filter.SaleTo}))
+</div>
+
+
+

@@ -1,0 +1,21 @@
+﻿@model MyFirstWebApp.Models.Cashier
+ 
+<div class="modal-content">
+    <div class="modal-header">
+        <h4>Кассир</h4>
+        <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+        
+    </div>
+    <div class="modal-body">
+        <dl class="dl-horizontal">
+            <dt>Имя кассира:</dt>
+            <dd>@Html.DisplayFor(model => model.CashierName)</dd>
+ 
+            <dt>Возраст:</dt>
+            <dd>@Html.DisplayFor(model => model.Age)</dd>
+ 
+            <dt>Магазин:</dt>
+            <dd>@Html.DisplayFor(model => model.ShopModelId)</dd>
+        </dl>
+    </div>
+</div>

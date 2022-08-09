@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace MyFirstWebApp.Controllers
@@ -12,56 +13,155 @@ namespace MyFirstWebApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly DemoContext context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, DemoContext context)
         {
             _logger = logger;
+            this.context = context;
         }
 
-        
-        public IActionResult Index()
+
+       
+       
+        public IActionResult AddShops(ShopFiltrViwModel shopFiltrViwModel)
         {
-            return View();
+            
+            var indexViewModel = GetPaggedShops(shopFiltrViwModel.Page, shopFiltrViwModel);
+            indexViewModel.Filter = shopFiltrViwModel;
+            return View(indexViewModel);
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult GetShopsForm(ShopFiltrViwModel shopFiltrViwModel)
         {
-            return View();
+            if (!ModelState.IsValid)
+            {
+                return View("AddShops", new IndexViewModel());
+            }
+            var indexViewModel = GetPaggedShops(shopFiltrViwModel.Page, shopFiltrViwModel);
+            indexViewModel.Filter = shopFiltrViwModel;
+            return View("AddShops", indexViewModel);
+
         }
 
-        public IActionResult AddShops ()
+        [HttpGet]
+        public IActionResult GetShops(ShopFiltrViwModel shopFiltrViwModel)
         {
+            if(!ModelState.IsValid)
+            {
+                return Json(shopFiltrViwModel);
+            }
+            var indexViewModel = GetPaggedShops(shopFiltrViwModel.Page, shopFiltrViwModel );
+            return Json(indexViewModel);
+            
+        }
 
-            List<ShopModel> shops = new List<ShopModel>();
+        [HttpPost]
+        public IActionResult SetShops([FromBody] ShopModel shopModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             using (var db = new DemoContext())
             {
-                shops = db.Shops.ToList();
+                db.Add(shopModel);
+                db.SaveChanges();
             }
-            ViewBag.Shops = shops;
-
-                return View();
+            return Ok();
         }
-        [HttpPost]
-        public IActionResult AddShops(ShopModel shop)
+
+        [HttpGet]
+        public IActionResult Delete(int id)
         {
-            if (ModelState.IsValid)
+            using (var db = new DemoContext())
             {
-                using (var db = new DemoContext())
+                ShopModel shop = db.Shops.Find(id);
+                if (shop == null)
                 {
-                    db.Add(shop);
-                    db.SaveChanges();
+                    return HttpNotFound();
                 }
-
+                return View(shop);
             }
-                            
-            return View();
         }
 
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        private IActionResult HttpNotFound()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            throw new NotImplementedException();
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed([FromBody]List<int> selectedItems)
+        {
+            using (var db = new DemoContext())
+            {
+                foreach ( int s in selectedItems)
+                {
+                    ShopModel shop = db.Shops.Find(s);
+                    if (shop == null)
+                    {
+                        return (ActionResult)HttpNotFound();
+                    }
+                    db.Shops.Remove(shop);
+                    db.SaveChanges();
+
+                }
+               
+            }
+            return Ok();
+        }
+
+        private IndexViewModel GetPaggedShops(int page,ShopFiltrViwModel shopFiltrViwModel )
+        {
+            List<ShopModel> shopsPerPages = new List<ShopModel>();
+            int pageSize = 5;
+            var totalCount = 0;
+            using (var db = new DemoContext())
+            {
+                var query = db.Shops.AsQueryable();
+
+                
+                //Expression exp = null;
+                //var param = Expression.Parameter(typeof(ShopModel), "x");
+                if (shopFiltrViwModel.SaleFrom.HasValue)
+                {
+                    //var p = Expression.Property(param, "Sale");
+                    //exp = Expression.GreaterThanOrEqual(p, Expression.Constant(shopFiltrViwModel.SaleFrom.Value));
+                    query = query.Where(x => x.Sale >= shopFiltrViwModel.SaleFrom.Value);
+                }
+                if (shopFiltrViwModel.SaleTo.HasValue)
+                {
+                    //var p = Expression.Property(param, "Sale");
+                    //var and = Expression.LessThanOrEqual(p, Expression.Constant(shopFiltrViwModel.SaleTo.Value));
+                    //exp = exp == null ? and : Expression.And(exp, and);
+                    query = query.Where(x => x.Sale <= shopFiltrViwModel.SaleTo.Value);
+                }
+                if (!string.IsNullOrEmpty(shopFiltrViwModel.ShopNameFiltr))
+                {
+                    //var p = Expression.Property(param, "ShopName");
+                    //var and = Expression.Equal(p, Expression.Constant(shopFiltrViwModel.ShopNameFiltr));
+                    //exp = exp == null ? and : Expression.And(exp, and);
+                    query = query.Where(x => x.ShopName == shopFiltrViwModel.ShopNameFiltr);
+                }
+                //if (exp != null)
+                // {
+                //var tt = Expression.Lambda<Func<ShopModel, bool>>(exp, param);
+                //query = query.Where(tt);
+                //}
+                totalCount = query.Count();
+                query = query.OrderBy(x => x.Id)
+                       .Skip((page - 1) * pageSize)
+                       .Take(pageSize);
+                shopsPerPages = query.ToList();
+                
+                PageInfo pageInfo = new PageInfo { PageNumber = page, PageSize = pageSize, TotalCount = totalCount };
+                IndexViewModel indexViewModel = new IndexViewModel { PageInfo = pageInfo, Shops = shopsPerPages };
+                return indexViewModel;
+
+            }
+
         }
     }
 }

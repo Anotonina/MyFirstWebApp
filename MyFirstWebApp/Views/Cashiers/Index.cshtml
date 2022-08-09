@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Http
+@model IEnumerable<MyFirstWebApp.Models.Cashier>
+
+
+@section Scripts{
+<script>
+    let model = @Json.Serialize(Model);
+</script>
+<script src="~/js/addShops.js" asp-append-version="true"></script>
+<script src="~/js/Cashiers.js" asp-append-version="true"></script>
+
+}
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Кассиры магазина @Context.Request.RouteValues["id"]</h1>
+
+
+<p>
+    <a asp-action="Create" asp-route-shopModelId="@Context.Request.RouteValues["id"]">Create New</a>
+
+</p>
+<div id="modDialog" class="modal fade" >
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<table class="table" id="cashiers-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CashierName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Age)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShopModel.Id) магазина
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.ActionLink(item.CashierName, "PartialDetails", 
+                new { id = item.CashierId }, new { @class = "cashierItem" })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+             <td>
+                @Html.DisplayFor(modelItem => item.ShopModelId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CashierId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CashierId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CashierId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+

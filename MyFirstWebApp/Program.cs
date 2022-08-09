@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 
 namespace MyFirstWebApp
 {
@@ -13,7 +14,9 @@ namespace MyFirstWebApp
     {
         public static void Main(string[] args)
         {
+
             CreateHostBuilder(args).Build().Run();
+           
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -22,5 +25,7 @@ namespace MyFirstWebApp
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+       
+        
     }
 }
