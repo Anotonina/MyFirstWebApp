@@ -6,7 +6,7 @@
     let model = @Json.Serialize(Model);
 </script>
 <script src="~/js/addShops.js" asp-append-version="true"></script>
-<script src="~/js/addCashiers.js" asp-append-version="true"></script>
+
 
 }
 
@@ -28,7 +28,11 @@
         @Html.TextBox("Sale", " ", new{ type = "number"})
         <span for="Sale" class="text-danger"></span>
     </p>
-
+     <p>
+        <label>Доход магазина</label><br />
+        @Html.TextBox("ShopIncome", " ", new{ type = "number"})
+        <span for="ShopIncome" class="text-danger"></span>
+    </p>
     <p>
         <button type="button" id="reset" onclick="onClick()">Отправить</button>
     </p>
@@ -73,13 +77,17 @@
                     <button type="button" onclick="bubbleSort('sale', this)">Сортировать</button>
 
                 </th>
+                 <th scope="col">
+                    <p>Доход магазина</p>
+                    <button type="button" onclick="bubbleSort('shopIncome', this)">Сортировать</button>
+
+                </th>
                 <th scope="col">
-                    <p >Выбранные магазины </p>
-                     
-                    <button type="button"id="result" onclick="onClickDelete()" >Удалить: <span>0</span> </button>
+                    <p >Выбранные магазины </p>                    
                     <p>
 		              <label class="text-success"><input type="checkbox" id="checkbox"> Отметить/cнять все</label>
 	                </p>
+                    <button type="button"id="result" onclick="onClickDelete()" >Удалить: <span>0</span> </button>
                    
                 </th>
             </tr>
@@ -91,6 +99,7 @@
                 <tr>                                      
                     <td><a href="/Cashiers/Index/@shop.Id">@shop.ShopName</a></td>
                     <td>@shop.Sale</td>
+                     <td>@shop.ShopIncome</td>
                     <td> 
                         <p class="controls">
                        <input type="checkbox" onclick="selectedCheckbox()" class="needCheck" name="checkShop" value="@shop.Id" id="check" />

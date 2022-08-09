@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MyFirstWebApp.Models
 {
@@ -16,7 +17,9 @@ namespace MyFirstWebApp.Models
 
         [Required(ErrorMessage = "Введите скидку")]
         [Range(1, 100, ErrorMessage = "Недопустимая скидка")]
-        public decimal Sale { get; set; }
+        public int Sale { get; set; }
+        public int ShopIncome { get; set; }
+        [JsonIgnore]
         public virtual List<Cashier> Cashiers { get; set; }
     }
 
@@ -96,6 +99,13 @@ namespace MyFirstWebApp.Models
         public int ShopmodelId { get; set; }
         public string CashierName { get; set; }
         public int Age { get; set; }
+    }
+
+    public class DiagramsViewModel
+    {
+        public IEnumerable<ShopModel> Shops { get; set; }        
+        
+      
     }
 
 

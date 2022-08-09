@@ -1,0 +1,18 @@
+﻿@model MyFirstWebApp.Models.DiagramsViewModel
+
+
+@section Scripts{
+<script>
+    let model = @Json.Serialize(Model);
+</script>
+<script src="~/js/Diagrams.js" asp-append-version="true"></script>
+}
+
+
+@{
+    ViewData["Title"] = "Diagrams";
+}
+<h2>@ViewData["Title"]</h2>
+
+<canvas id="popChart" width="600" height="400"></canvas>
+

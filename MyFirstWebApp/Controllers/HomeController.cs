@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MyFirstWebApp.Models;
 using System;
@@ -21,9 +22,17 @@ namespace MyFirstWebApp.Controllers
             this.context = context;
         }
 
+        public  IActionResult Diagrams()
+        {
+            DiagramsViewModel model = new DiagramsViewModel();
+            
+            model.Shops = context.Shops.ToList();
+           
+            
+            return View(model);
+        }
 
-       
-       
+
         public IActionResult AddShops(ShopFiltrViwModel shopFiltrViwModel)
         {
             

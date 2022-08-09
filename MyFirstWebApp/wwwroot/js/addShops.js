@@ -44,6 +44,7 @@ function bubbleSort(propetryName, elem) {
                 '<a href="/Cashiers/Index/' + shop.id + '">' + shop.shopName + '</a>' +
                 "</td>" +
                 "<td>" + shop.sale + "</td>" +
+                 "<td>" + shop.shopIncome + "</td>" +
                 "<td><p class='controls'><input type='checkbox' onclick='selectedCheckbox()' class='needCheck' name='checkShop' value='" + shop.id + "' id='check'/></p></td>" +
                 "</tr>");
         }
@@ -59,7 +60,7 @@ function bubbleSort(propetryName, elem) {
         $.ajax({
             type: "POST",
             url: "/Home/SetShops",
-            data: JSON.stringify({ ShopName: $("[name='ShopName']").val(), Sale: $("[name='Sale']").val() }),
+            data: JSON.stringify({ ShopName: $("[name='ShopName']").val(), Sale: $("[name='Sale']").val(), ShopIncome: $("[name='ShopIncome']").val() }),
             success: getShops,
             contentType: "application/json"
         })
@@ -88,6 +89,7 @@ function bubbleSort(propetryName, elem) {
                     '<a href="/Cashiers/Index/' + shop.id + '">' + shop.shopName + '</a>' +
                     "</td>" +
                     "<td>" + shop.sale + "</td>" +
+                    "<td>" + shop.shopIncome + "</td>" +
                     "<td><p class='controls'><input type='checkbox' onclick='selectedCheckbox()' class='needCheck' name='checkShop' value='" + shop.id + "' id='check'/></p></td>" +
                     "</tr>");
             }
