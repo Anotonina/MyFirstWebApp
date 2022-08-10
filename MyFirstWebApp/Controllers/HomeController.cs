@@ -26,7 +26,8 @@ namespace MyFirstWebApp.Controllers
         {
             DiagramsViewModel model = new DiagramsViewModel();
             
-            model.Shops = context.Shops.ToList();
+            model.ShopNames = context.Shops.Select(s => s.ShopName).ToList();
+            model.Income = context.Shops.Select(s => s.ShopIncome).ToList();
            
             
             return View(model);

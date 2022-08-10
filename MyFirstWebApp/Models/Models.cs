@@ -19,7 +19,6 @@ namespace MyFirstWebApp.Models
         [Range(1, 100, ErrorMessage = "Недопустимая скидка")]
         public int Sale { get; set; }
         public int ShopIncome { get; set; }
-        [JsonIgnore]
         public virtual List<Cashier> Cashiers { get; set; }
     }
 
@@ -103,8 +102,8 @@ namespace MyFirstWebApp.Models
 
     public class DiagramsViewModel
     {
-        public IEnumerable<ShopModel> Shops { get; set; }
-        
+        public List<string> ShopNames { get; set; }
+        public List<int> Income { get; set; }
     }
 
 
