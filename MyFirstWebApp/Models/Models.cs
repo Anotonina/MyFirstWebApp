@@ -103,9 +103,8 @@ namespace MyFirstWebApp.Models
 
     public class DiagramsViewModel
     {
-        public IEnumerable<ShopModel> Shops { get; set; }        
+        public IEnumerable<ShopModel> Shops { get; set; }
         
-      
     }
 
 
