@@ -6,6 +6,7 @@
     let model = @Json.Serialize(Model);
 </script>
 <script src="~/js/Diagrams.js" asp-append-version="true"></script>
+
 }
 
 
@@ -13,6 +14,10 @@
     ViewData["Title"] = "Diagrams";
 }
 <h2>@ViewData["Title"]</h2>
-
-<canvas id="popChart" width="600" height="400"></canvas>
+<div style="width: 600px; height: 400px;">  
+    <canvas id="popChart"></canvas>
+</div>
+<div style="width: 400px; height: 400px;">
+    <canvas id="popChartPie"></canvas>
+</div>
 
