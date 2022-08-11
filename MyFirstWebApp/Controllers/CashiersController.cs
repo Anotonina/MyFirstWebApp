@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace MyFirstWebApp.Controllers
     public class CashiersController : Controller
     {
         private readonly DemoContext _context;
+        private readonly IMapper _mapper;
 
-        public CashiersController(DemoContext context)
+        public CashiersController(DemoContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: Cashiers
@@ -37,7 +40,7 @@ namespace MyFirstWebApp.Controllers
         public IActionResult Create(int shopModelId)
         {
 
-            CreateCashierViewModel model = new CreateCashierViewModel();
+            CashierViewModel model = new CashierViewModel();
 
             model.ShopmodelId = shopModelId;
 
@@ -59,6 +62,9 @@ namespace MyFirstWebApp.Controllers
         // GET: Cashiers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            CashierViewModel model = new CashierViewModel();
+
+
             if (id == null || _context.Cashiers == null)
             {
                 return NotFound();
@@ -88,7 +94,7 @@ namespace MyFirstWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateCashierViewModel cashier)
+        public async Task<IActionResult> Create(CashierViewModel cashier)
         {
             if (ModelState.IsValid)
             {
@@ -124,7 +130,7 @@ namespace MyFirstWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EditCashierViewModel cashierViewModel)
+        public async Task<IActionResult> Edit(int id, CashierViewModel cashierViewModel)
         {
 
             if (id != cashierViewModel.CashierId)

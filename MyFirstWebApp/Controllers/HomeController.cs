@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MyFirstWebApp.Models;
@@ -14,21 +15,22 @@ namespace MyFirstWebApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly DemoContext context;
+        private readonly DemoContext _context;
+        private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger, DemoContext context)
+
+        public HomeController(ILogger<HomeController> logger, DemoContext context, IMapper mapper)
         {
             _logger = logger;
-            this.context = context;
+            _context = context;
+            _mapper = mapper;
         }
 
         public  IActionResult Diagrams()
         {
             DiagramsViewModel model = new DiagramsViewModel();
-            
-            model.ShopNames = context.Shops.Select(s => s.ShopName).ToList();
-            model.Income = context.Shops.Select(s => s.ShopIncome).ToList();
-           
+
+            model.ShopData = _mapper.Map<List<ShopIncome>>(_context.Shops);          
             
             return View(model);
         }

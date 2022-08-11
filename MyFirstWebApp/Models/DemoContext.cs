@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace MyFirstWebApp.Models
 {
@@ -9,9 +10,10 @@ namespace MyFirstWebApp.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite(@"Data Source=C:\work\Temp\Shops.db");
-        
 
-
-
+        internal object GetCashier(int v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

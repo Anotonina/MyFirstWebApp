@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+
+
 
 namespace MyFirstWebApp.Models
 {
@@ -69,6 +70,8 @@ namespace MyFirstWebApp.Models
             return result;
         }
     }
+    
+  
     public class Cashier
     {
         [Key]
@@ -80,7 +83,7 @@ namespace MyFirstWebApp.Models
 
     }
 
-    public class CreateCashierViewModel
+    public class CashierViewModel
     {   
         
         public IEnumerable<SelectListItem> Shops { get; set; }
@@ -91,19 +94,19 @@ namespace MyFirstWebApp.Models
 
         
     }
-    public class EditCashierViewModel
-    {
-        
-        public int CashierId { get; set; }
-        public int ShopmodelId { get; set; }
-        public string CashierName { get; set; }
-        public int Age { get; set; }
-    }
+  
 
     public class DiagramsViewModel
     {
-        public List<string> ShopNames { get; set; }
-        public List<int> Income { get; set; }
+        //public Dictionary<string, int> ShopData { get; set; }
+        //public List<string> ShopNames { get; set; }
+        //public List<int> Income { get; set; }
+        public List<ShopIncome> ShopData{ get; set; }
+}
+    public class ShopIncome
+    {
+        public string Name { get; set; }
+        public int Income { get; set; }
     }
 
 

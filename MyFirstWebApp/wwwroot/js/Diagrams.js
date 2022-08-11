@@ -1,14 +1,14 @@
 ﻿var popCanvas = $("#popChart");
 
 let shopsData = [];
-for (var i = 0; i < model.shopNames.length; i++) {
-    shopsData.push(model.shopNames[i]);
+for (var i = 0; i < model.shopData.length; i++) {
+    shopsData.push(model.shopData[i].name);
 }
 console.log(shopsData);
 
 let shopIncomeData = [];
-for (var i = 0; i < model.income.length; i++) {
-    shopIncomeData.push(model.income[i]);
+for (var i = 0; i < model.shopData.length; i++) {
+    shopIncomeData.push(model.shopData[i].income);
 }
 console.log(shopIncomeData);
 

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MyFirstWebApp.AutoMapperConfig;
 
 namespace MyFirstWebApp
 {
@@ -28,6 +29,7 @@ namespace MyFirstWebApp
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             //services.AddScoped<Microsoft.EntityFrameworkCore.DbContext, DemoContext>();
             services.AddSingleton< DemoContext>();
+            services.AddAutoMapper(typeof(MappingProfile));
             
 
         }
