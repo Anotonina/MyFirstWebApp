@@ -62,7 +62,7 @@ namespace MyFirstWebApp.Controllers
         // GET: Cashiers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            CashierViewModel model = new CashierViewModel();
+            
 
 
             if (id == null || _context.Cashiers == null)
@@ -80,7 +80,7 @@ namespace MyFirstWebApp.Controllers
 
             return View(cashier);
         }
-        public ActionResult PartialDetails(int id)
+        public IActionResult PartialDetails(int id)
         {
             Cashier c = _context.Cashiers.FirstOrDefault(c => c.CashierId == id);
             if (c != null)

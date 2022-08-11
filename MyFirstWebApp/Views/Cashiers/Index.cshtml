@@ -3,9 +3,10 @@
 
 
 @section Scripts{
-
-<script src="~/js/Cashiers.js" asp-append-version="true"></script>
-
+    <script>
+         let model = @Json.Serialize(Model);
+    </script>
+    <script src="~/js/Cashiers.js" asp-append-version="true"></script>
 }
 
 @{
@@ -40,9 +41,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.ActionLink(item.CashierName, "PartialDetails", 
-                new { id = item.CashierId }, new { @class = "cashierItem" })
+            <td class = "cashierItem" id= "@item.CashierId" >
+                
+               @Html.DisplayFor(modelItem => item.CashierName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Age)
