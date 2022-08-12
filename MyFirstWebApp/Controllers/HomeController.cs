@@ -59,7 +59,7 @@ namespace MyFirstWebApp.Controllers
 
         [HttpGet]
         public IActionResult GetShops(ShopFiltrViwModel shopFiltrViwModel)
-        {
+         {
             if(!ModelState.IsValid)
             {
                 return Json(shopFiltrViwModel);

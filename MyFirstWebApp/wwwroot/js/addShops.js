@@ -105,6 +105,7 @@ function bubbleSort(propetryName, elem) {
                 }
             }
             selectedCheckbox();
+            model = indexViewModel;
 
         })
     }

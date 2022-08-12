@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
-
+using System.Text.Json.Serialization;
 
 namespace MyFirstWebApp.Models
 {
@@ -86,7 +85,7 @@ namespace MyFirstWebApp.Models
     public class CashierViewModel
     {   
         public IEnumerable<SelectListItem> Shops { get; set; }
-        [System.Text.Json.Serialization.JsonIgnore]
+        [JsonIgnore]
         public IEnumerable<Cashier> Cashiers { get; set; }
         public string CashierName { get; set; }
         public int Age { get; set; }
