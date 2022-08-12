@@ -23,15 +23,16 @@ namespace MyFirstWebApp.Controllers
         }
 
         // GET: Cashiers
-        public async Task<IActionResult> Index(int? id = null)
+        public IActionResult Index(int? id = null)
         {
-            var q = _context.Cashiers.AsQueryable();
+            CashierViewModel model = new CashierViewModel();  
+            model.Cashiers = _context.Cashiers.AsQueryable();
             if (id.HasValue)
             {
-                q = q.Where(x => x.ShopModelId == id);
+                model.Cashiers = model.Cashiers.Where(x => x.ShopModelId == id);
             }
-            var result = await q.ToListAsync();
-            return View(result);
+            
+            return View(model);
         }
 
 
@@ -42,7 +43,7 @@ namespace MyFirstWebApp.Controllers
 
             CashierViewModel model = new CashierViewModel();
 
-            model.ShopmodelId = shopModelId;
+            model.ShopModelId = shopModelId;
 
             if (shopModelId == 0)
             {
@@ -72,19 +73,23 @@ namespace MyFirstWebApp.Controllers
 
             var cashier = await _context.Cashiers
                 .FirstOrDefaultAsync(m => m.CashierId == id);
-            
+            CashierViewModel model = _mapper.Map<CashierViewModel>(cashier);
+           // CashierViewModel model = new CashierViewModel() { Age = cashier.Age, CashierName = cashier.CashierName};
+
             if (cashier == null)
             {
                 return NotFound();
             }
 
-            return View(cashier);
+            return View(model);
         }
         public IActionResult PartialDetails(int id)
         {
             Cashier c = _context.Cashiers.FirstOrDefault(c => c.CashierId == id);
+            CashierViewModel model = _mapper.Map<CashierViewModel>(c);
+
             if (c != null)
-                return PartialView(c);
+                return PartialView(model);
             return NotFound();
         }
 
@@ -98,7 +103,8 @@ namespace MyFirstWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var cc = new Cashier() { Age = cashier.Age, CashierName = cashier.CashierName, ShopModelId = cashier.ShopmodelId };
+                var cc = _mapper.Map<Cashier>(cashier);
+               // var cc = new Cashier() { Age = cashier.Age, CashierName = cashier.CashierName, ShopModelId = cashier.ShopModelId };
 
                 _context.Add(cc);
                 await _context.SaveChangesAsync();
@@ -118,11 +124,14 @@ namespace MyFirstWebApp.Controllers
             }
 
             var cashier = await _context.Cashiers.FindAsync(id);
+            CashierViewModel model = _mapper.Map<CashierViewModel>(cashier);
+
+
             if (cashier == null)
             {
                 return NotFound();
             }
-            return View(cashier);
+            return View(model);
         }
 
         // POST: Cashiers/Edit/5
@@ -140,12 +149,15 @@ namespace MyFirstWebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                var dbc = _context.Cashiers.Find(cashierViewModel.CashierId);
-                dbc.Age = cashierViewModel.Age;
-                dbc.CashierName = cashierViewModel.CashierName;
-                dbc.ShopModelId = cashierViewModel.ShopmodelId;
+                Cashier cashier = _context.Cashiers.Find(cashierViewModel.CashierId);
+                //cashier = _mapper.Map<Cashier>(cashierViewModel);
 
-                _context.Cashiers.Update(dbc);
+                 cashier.Age = cashierViewModel.Age;
+                 cashier.CashierName = cashierViewModel.CashierName;
+                 cashier.ShopModelId = cashierViewModel.ShopModelId;
+
+               // _context.ChangeTracker.Clear();
+                _context.Cashiers.Update(cashier);
                  await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -163,12 +175,14 @@ namespace MyFirstWebApp.Controllers
 
             var cashier = await _context.Cashiers
                 .FirstOrDefaultAsync(m => m.CashierId == id);
+            CashierViewModel model = _mapper.Map<CashierViewModel>(cashier);
+
             if (cashier == null)
             {
                 return NotFound();
             }
 
-            return View(cashier);
+            return View(model);
         }
 
         // POST: Cashiers/Delete/5
@@ -181,6 +195,7 @@ namespace MyFirstWebApp.Controllers
                 return Problem("Entity set 'DemoContext.Cashiers'  is null.");
             }
             var cashier = await _context.Cashiers.FindAsync(id);
+
             if (cashier != null)
             {
                 _context.Cashiers.Remove(cashier);

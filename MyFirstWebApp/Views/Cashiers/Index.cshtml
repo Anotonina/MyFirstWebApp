@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Http
-@model IEnumerable<MyFirstWebApp.Models.Cashier>
+@model MyFirstWebApp.Models.CashierViewModel
 
 
 @section Scripts{
@@ -23,7 +23,7 @@
 <div id="modDialog" class="modal fade" >
     <div id="dialogContent" class="modal-dialog"></div>
 </div>
-<table class="table" id="cashiers-table">
+<table class="table editable" id="cashiers-table">
     <thead>
         <tr>
             <th>
@@ -33,15 +33,15 @@
                 @Html.DisplayNameFor(model => model.Age)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ShopModel.Id) магазина
+                @Html.DisplayNameFor(model => model.ShopModelId) 
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td class = "cashierItem" id= "@item.CashierId" >
+@foreach (var item in Model.Cashiers) {
+        <tr class = "cashierItem" id= "@item.CashierId">
+            <td  >
                 
                @Html.DisplayFor(modelItem => item.CashierName)
             </td>
@@ -51,8 +51,8 @@
              <td>
                 @Html.DisplayFor(modelItem => item.ShopModelId)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CashierId">Edit</a> |
+            <td >
+                <a onclick="return true" asp-action="Edit" asp-route-id="@item.CashierId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.CashierId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.CashierId">Delete</a>
             </td>

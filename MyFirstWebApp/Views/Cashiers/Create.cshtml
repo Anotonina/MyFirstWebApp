@@ -22,17 +22,17 @@
                 <input asp-for="Age" class="form-control" />
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
-            @if(Model.ShopmodelId == 0)
+            @if(Model.ShopModelId == 0)
             {
                 <div>
-            <label asp-for="ShopmodelId"></label>
-            <select asp-for="ShopmodelId" asp-items="Model.Shops"></select>
-            <span asp-validation-for="ShopmodelId" class="text-danger"></span>
+            <label asp-for="ShopModelId"></label>
+            <select asp-for="ShopModelId" asp-items="Model.Shops"></select>
+            <span asp-validation-for="ShopModelId" class="text-danger"></span>
                 </div>
             }
             else
             {
-                <input name="ShopmodelId" value="@Model.ShopmodelId" type="hidden">
+                <input name="ShopmodelId" value="@Model.ShopModelId" type="hidden">
             }
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

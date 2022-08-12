@@ -85,14 +85,21 @@ namespace MyFirstWebApp.Models
 
     public class CashierViewModel
     {   
-        
         public IEnumerable<SelectListItem> Shops { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public IEnumerable<Cashier> Cashiers { get; set; }
         public string CashierName { get; set; }
         public int Age { get; set; }
         public int CashierId { get; set; }
-        public  int ShopmodelId { get; set; }
+        public  int ShopModelId { get; set; }
+        public virtual ShopModel ShopModel { get; set; }
 
-        
+
+        public CashierViewModel()
+        {
+            Cashiers = new List<Cashier>();
+
+        }
     }
   
 

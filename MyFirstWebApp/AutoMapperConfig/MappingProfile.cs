@@ -8,6 +8,7 @@ namespace MyFirstWebApp.AutoMapperConfig
         public MappingProfile()
         {
             CreateMap<Cashier, CashierViewModel>();
+            CreateMap<CashierViewModel, Cashier>();
           
             CreateMap<ShopModel,ShopIncome>()
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.ShopName))
