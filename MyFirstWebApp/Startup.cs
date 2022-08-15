@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MyFirstWebApp.AutoMapperConfig;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyFirstWebApp
 {
@@ -30,7 +31,10 @@ namespace MyFirstWebApp
             //services.AddScoped<Microsoft.EntityFrameworkCore.DbContext, DemoContext>();
             services.AddSingleton< DemoContext>();
             services.AddAutoMapper(typeof(MappingProfile));
-            
+            services.AddAuthentication("Cookies")
+                .AddCookie();
+            services.AddAuthorization();
+
 
         }
 
@@ -47,13 +51,15 @@ namespace MyFirstWebApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseAuthentication();
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();// Подключение EndpointRoutingMiddleware
 
             app.UseAuthorization();// Подключение EndpointMiddleware
-
+       
             app.UseEndpoints(endpoints =>
             {
                 // определение маршрутов
