@@ -35,6 +35,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.ShopModelId) 
             </th>
+             <th>
+                @Html.DisplayNameFor(model => model.UserId) 
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -50,6 +53,9 @@
             </td>
              <td>
                 @Html.DisplayFor(modelItem => item.ShopModelId)
+            </td>
+             <td>
+                @Html.DisplayFor(modelItem => item.UserId)
             </td>
             <td >
                 <a onclick="return true" asp-action="Edit" asp-route-id="@item.CashierId">Edit</a> |

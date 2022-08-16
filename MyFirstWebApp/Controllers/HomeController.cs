@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -35,7 +36,7 @@ namespace MyFirstWebApp.Controllers
             return View(model);
         }
 
-
+        
         public IActionResult AddShops(ShopFiltrViwModel shopFiltrViwModel)
         {
             

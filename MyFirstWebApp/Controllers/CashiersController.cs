@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ namespace MyFirstWebApp.Controllers
 
 
         // GET: Cashiers/Create
+        
         public IActionResult Create(int shopModelId)
         {
 
@@ -116,6 +118,7 @@ namespace MyFirstWebApp.Controllers
 
 
         // GET: Cashiers/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Cashiers == null)
@@ -166,6 +169,7 @@ namespace MyFirstWebApp.Controllers
         }
 
         // GET: Cashiers/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Cashiers == null)

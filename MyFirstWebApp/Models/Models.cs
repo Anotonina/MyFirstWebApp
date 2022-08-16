@@ -79,6 +79,8 @@ namespace MyFirstWebApp.Models
         public int Age { get; set; }
         public int ShopModelId { get; set; }
         public virtual ShopModel ShopModel { get; set; }
+        public int? UserId { get; set; }
+        public virtual User User { get; set; }
 
     }
 
@@ -92,7 +94,8 @@ namespace MyFirstWebApp.Models
         public int CashierId { get; set; }
         public  int ShopModelId { get; set; }
         public virtual ShopModel ShopModel { get; set; }
-
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
 
         public CashierViewModel()
         {
