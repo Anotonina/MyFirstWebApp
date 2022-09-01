@@ -32,7 +32,7 @@ namespace MyFirstWebApp
             services.AddSingleton< DemoContext>();
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddAuthentication("Cookies")
-                .AddCookie();
+                .AddCookie(options => options.LoginPath = "/Account/login");
             services.AddAuthorization();
 
 

@@ -11,6 +11,10 @@ namespace MyFirstWebApp.Models
         public string Password { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
         public virtual Cashier Cashier { get; set; }
+        public User()
+        {
+            Roles = new List<Role>();
+        }
 
     }
     public class Role
@@ -19,7 +23,10 @@ namespace MyFirstWebApp.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public virtual ICollection<User> Users { get; set; }
+        public Role()
+        {
+            Users = new List<User>();
+        }
     }
 
-    
 }

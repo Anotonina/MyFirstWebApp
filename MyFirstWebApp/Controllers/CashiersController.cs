@@ -24,6 +24,7 @@ namespace MyFirstWebApp.Controllers
         }
 
         // GET: Cashiers
+        
         public IActionResult Index(int? id = null)
         {
             CashierViewModel model = new CashierViewModel();  
@@ -39,7 +40,7 @@ namespace MyFirstWebApp.Controllers
 
 
         // GET: Cashiers/Create
-        
+        [Authorize]
         public IActionResult Create(int shopModelId)
         {
 
@@ -158,6 +159,7 @@ namespace MyFirstWebApp.Controllers
                  cashier.Age = cashierViewModel.Age;
                  cashier.CashierName = cashierViewModel.CashierName;
                  cashier.ShopModelId = cashierViewModel.ShopModelId;
+
 
                // _context.ChangeTracker.Clear();
                 _context.Cashiers.Update(cashier);
