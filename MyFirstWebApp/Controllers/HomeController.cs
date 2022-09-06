@@ -1,24 +1,21 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MyFirstWebApp.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace MyFirstWebApp.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
         private readonly DemoContext _context;
         private readonly IMapper _mapper;
 
+        
 
         public HomeController(ILogger<HomeController> logger, DemoContext context, IMapper mapper)
         {
@@ -27,6 +24,7 @@ namespace MyFirstWebApp.Controllers
             _mapper = mapper;
         }
 
+       
         public  IActionResult Diagrams()
         {
             DiagramsViewModel model = new DiagramsViewModel();
@@ -37,6 +35,7 @@ namespace MyFirstWebApp.Controllers
         }
 
         
+
         public IActionResult AddShops(ShopFiltrViwModel shopFiltrViwModel)
         {
             
@@ -57,7 +56,7 @@ namespace MyFirstWebApp.Controllers
             return View("AddShops", indexViewModel);
 
         }
-
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult GetShops(ShopFiltrViwModel shopFiltrViwModel)
          {
@@ -69,7 +68,7 @@ namespace MyFirstWebApp.Controllers
             return Json(indexViewModel);
             
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult SetShops([FromBody] ShopModel shopModel)
         {
@@ -86,6 +85,8 @@ namespace MyFirstWebApp.Controllers
             return Ok();
         }
 
+
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult Delete(int id)
         {
@@ -105,6 +106,7 @@ namespace MyFirstWebApp.Controllers
             throw new NotImplementedException();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed([FromBody]List<int> selectedItems)
         {

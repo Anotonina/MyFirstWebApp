@@ -1,5 +1,19 @@
 ﻿@model MyFirstWebApp.Models.LoginModel
- 
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HelloView</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/hello.css" />
+</head>
+ <body class="log-body">
 <h2>Вход на сайт</h2>
  
 <a asp-action="Register" asp-controller="Account">Регистрация</a>
@@ -22,3 +36,5 @@
         </div>
     </div>
 </form>
+ </body>
+ </html>

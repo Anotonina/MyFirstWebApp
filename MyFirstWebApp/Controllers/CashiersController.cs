@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +10,8 @@ using MyFirstWebApp.Models;
 
 namespace MyFirstWebApp.Controllers
 {
-    public class CashiersController : Controller
+   [Authorize(Roles = "admin")]
+    public class CashiersController : BaseController
     {
         private readonly DemoContext _context;
         private readonly IMapper _mapper;
@@ -24,7 +23,6 @@ namespace MyFirstWebApp.Controllers
         }
 
         // GET: Cashiers
-        
         public IActionResult Index(int? id = null)
         {
             CashierViewModel model = new CashierViewModel();  
@@ -33,47 +31,30 @@ namespace MyFirstWebApp.Controllers
             {
                 model.Cashiers = model.Cashiers.Where(x => x.ShopModelId == id);
             }
-            
             return View(model);
         }
-
-
-
         // GET: Cashiers/Create
-        [Authorize]
         public IActionResult Create(int shopModelId)
         {
-
             CashierViewModel model = new CashierViewModel();
-
             model.ShopModelId = shopModelId;
-
+            model.Roles = _context.Roles
+                            .Select(role => new SelectListItem { Text = role.Name, Value = role.Id.ToString() });
             if (shopModelId == 0)
             {
-
                 model.Shops = _context.Shops
                                .Select(shop => new SelectListItem { Text = shop.ShopName, Value = shop.Id.ToString() });
-
                 return View(model);
             }
-
             return View(model);
-
-
         }
-
-        
         // GET: Cashiers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            
-
-
             if (id == null || _context.Cashiers == null)
             {
                 return NotFound();
             }
-
             var cashier = await _context.Cashiers
                 .FirstOrDefaultAsync(m => m.CashierId == id);
             CashierViewModel model = _mapper.Map<CashierViewModel>(cashier);
@@ -171,7 +152,7 @@ namespace MyFirstWebApp.Controllers
         }
 
         // GET: Cashiers/Delete/5
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Cashiers == null)

@@ -34,7 +34,11 @@
                 @Html.DisplayFor(modelItem => item.Password)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Roles)
+                    @foreach (var role in item.Roles ){
+                        @Html.DisplayFor(modelItem => role.Name) <br>;
+
+                    }
+                    
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

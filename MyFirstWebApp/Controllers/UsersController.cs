@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,8 @@ using MyFirstWebApp.Models;
 
 namespace MyFirstWebApp.Controllers
 {
-    public class UsersController : Controller
+
+    public class UsersController : BaseController
     {
         private readonly DemoContext _context;
 
@@ -21,7 +23,9 @@ namespace MyFirstWebApp.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Users.ToListAsync());
+            var users = await _context.Users.ToListAsync();
+            var u = users[0];
+              return View(users);
         }
 
         // GET: Users/Details/5
@@ -43,6 +47,7 @@ namespace MyFirstWebApp.Controllers
         }
 
         // GET: Users/Create
+        [Authorize(Roles = "admin, user")]
         public IActionResult Create()
         {
             return View();
@@ -57,11 +62,17 @@ namespace MyFirstWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
+                User User = user;
+                Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "user");
+
+                if (userRole != null)
+                    User.Roles.Add(userRole);
+
+                _context.Add(User);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(User);
         }
 
         // GET: Users/Edit/5

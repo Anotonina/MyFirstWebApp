@@ -25,6 +25,7 @@ namespace MyFirstWebApp.Models
             base.OnModelCreating(modelBuilder);
             string adminRoleName = "admin";
             string userRoleName = "user";
+            string cashierRoleName = "cashier";
  
             string adminEmail = "admin@mail.ru";
             string adminPassword = "123456";
@@ -32,10 +33,12 @@ namespace MyFirstWebApp.Models
             
             Role adminRole = new Role { Id = 1, Name = adminRoleName };
             Role userRole = new Role { Id = 2, Name = userRoleName};
-            modelBuilder.Entity<Role>().HasData(new Role[] { adminRole, userRole });
-            
-            
+            Role cashierRole = new Role { Id = 3, Name = cashierRoleName };
+
             User adminUser = new User { Id = 1, Email = adminEmail, Password = adminPassword };
+            
+
+            modelBuilder.Entity<Role>().HasData(new Role[] { adminRole, userRole, cashierRole });                     
             modelBuilder.Entity<User>().HasData(new User []{ adminUser });
             modelBuilder.Entity("RoleUser").HasData(new { RolesId = 1, UsersId = 1 });
             modelBuilder.Entity("RoleUser").HasData(new { RolesId = 2, UsersId = 1 });

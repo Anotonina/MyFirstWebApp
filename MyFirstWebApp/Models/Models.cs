@@ -87,6 +87,7 @@ namespace MyFirstWebApp.Models
     public class CashierViewModel
     {   
         public IEnumerable<SelectListItem> Shops { get; set; }
+        public IEnumerable<SelectListItem> Roles { get; set; }
         [JsonIgnore]
         public IEnumerable<Cashier> Cashiers { get; set; }
         public string CashierName { get; set; }

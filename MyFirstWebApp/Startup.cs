@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,7 +32,11 @@ namespace MyFirstWebApp
             services.AddSingleton< DemoContext>();
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddAuthentication("Cookies")
-                .AddCookie(options => options.LoginPath = "/Account/login");
+                .AddCookie(options => 
+                {
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.AccessDeniedPath = new PathString("/Account/Login");
+                });
             services.AddAuthorization();
 
 
@@ -51,26 +55,26 @@ namespace MyFirstWebApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseAuthentication();
+            
             
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();// Подключение EndpointRoutingMiddleware
+            app.UseRouting();
 
-            app.UseAuthorization();// Подключение EndpointMiddleware
+            app.UseAuthentication();
+            app.UseAuthorization();
        
             app.UseEndpoints(endpoints =>
             {
                 // определение маршрутов
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=AddShops}/{id?}");
+                    pattern: "{controller=Account}/{action=HelloView}/{id?}");
                
             });
             ApplyMigrations(db);
             
-
         }
 
         private void ApplyMigrations(DbContext db)
