@@ -22,7 +22,13 @@
                 <input asp-for="Age" class="form-control" />
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
+
            
+            <div>
+            <label asp-for="User"></label>
+            <select asp-for="UserId" asp-items="Model.Users"></select>
+            <span asp-validation-for="UserId" class="text-danger"></span>
+                </div>
             @if(Model.ShopModelId == 0)
             {
                 <div>

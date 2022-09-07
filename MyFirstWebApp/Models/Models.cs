@@ -79,7 +79,7 @@ namespace MyFirstWebApp.Models
         public int Age { get; set; }
         public int ShopModelId { get; set; }
         public virtual ShopModel ShopModel { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public virtual User User { get; set; }
 
     }
@@ -87,7 +87,7 @@ namespace MyFirstWebApp.Models
     public class CashierViewModel
     {   
         public IEnumerable<SelectListItem> Shops { get; set; }
-        public IEnumerable<SelectListItem> Roles { get; set; }
+        public IEnumerable<SelectListItem> Users { get; set; }
         [JsonIgnore]
         public IEnumerable<Cashier> Cashiers { get; set; }
         public string CashierName { get; set; }

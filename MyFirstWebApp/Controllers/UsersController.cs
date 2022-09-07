@@ -82,7 +82,7 @@ namespace MyFirstWebApp.Controllers
             {
                 return NotFound();
             }
-
+            
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
@@ -105,22 +105,15 @@ namespace MyFirstWebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                
+                User u = _context.Users.Find(user.Id);
+                u.Email= user.Email;
+                
+                u.Password = user.Password;
+
+               // _context.ChangeTracker.Clear();
+                _context.Users.Update(u);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(user);

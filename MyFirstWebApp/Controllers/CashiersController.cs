@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -22,6 +23,7 @@ namespace MyFirstWebApp.Controllers
             _mapper = mapper;
         }
 
+
         // GET: Cashiers
         public IActionResult Index(int? id = null)
         {
@@ -33,21 +35,26 @@ namespace MyFirstWebApp.Controllers
             }
             return View(model);
         }
+
+
         // GET: Cashiers/Create
         public IActionResult Create(int shopModelId)
         {
             CashierViewModel model = new CashierViewModel();
             model.ShopModelId = shopModelId;
-            model.Roles = _context.Roles
-                            .Select(role => new SelectListItem { Text = role.Name, Value = role.Id.ToString() });
+            model.Users = _context.Users
+                        .Select(user => new SelectListItem { Text = user.Email, Value = user.Id.ToString() });
             if (shopModelId == 0)
             {
                 model.Shops = _context.Shops
                                .Select(shop => new SelectListItem { Text = shop.ShopName, Value = shop.Id.ToString() });
                 return View(model);
             }
+           
             return View(model);
         }
+
+
         // GET: Cashiers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -67,6 +74,8 @@ namespace MyFirstWebApp.Controllers
 
             return View(model);
         }
+
+
         public IActionResult PartialDetails(int id)
         {
             Cashier c = _context.Cashiers.FirstOrDefault(c => c.CashierId == id);
@@ -85,6 +94,13 @@ namespace MyFirstWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CashierViewModel cashier)
         {
+            var isCashier = _context.Cashiers.FirstOrDefault(c => c.UserId ==cashier.UserId );
+           
+            if (isCashier!= null)
+            {
+                throw new ArgumentException("Этот пользователь занят");
+            }
+            
             if (ModelState.IsValid)
             {
                 var cc = _mapper.Map<Cashier>(cashier);
@@ -135,8 +151,9 @@ namespace MyFirstWebApp.Controllers
             if (ModelState.IsValid)
             {
                 Cashier cashier = _context.Cashiers.Find(cashierViewModel.CashierId);
-                //cashier = _mapper.Map<Cashier>(cashierViewModel);
-
+                
+                 cashier.User.Email = cashierViewModel.User.Email;
+                 cashier.User.Password = cashierViewModel.User.Password;
                  cashier.Age = cashierViewModel.Age;
                  cashier.CashierName = cashierViewModel.CashierName;
                  cashier.ShopModelId = cashierViewModel.ShopModelId;
