@@ -2,6 +2,7 @@
 
 
 
+
 function bubbleSort(propetryName, elem) {
     
         let isDescDirection = false;
@@ -56,7 +57,43 @@ function bubbleSort(propetryName, elem) {
     //2) subscribe on click event and execute finction via JQuery
     //2.1 Rerender table based on sorted data
 
-    function onClick() {
+function onClick() {
+    let f = $(".validate");
+    f.validate({
+        rules: {
+            ShopName: {
+                required: true,
+                rangelength: [1, 15]
+            },
+            Sale: {
+                required: true,
+                number: true,
+                range: [1, 100]
+            },
+            ShopIncome: {
+                required: true,
+                number: true,
+                range: [1, 100]
+            }
+        },
+        messages: {
+            ShopName: {
+                required: "Введите название магазина",
+                rangelength: "Длина строки от 1 до 15 символов"
+            },
+            Sale: {
+                required: "Ввведите скидку",
+                number: "Введите число",
+                range:"Скидка может быть от 1 до 100"
+            },
+            ShopIncome: {
+                required: "Ввведите скидку",
+                number: "Введите число",
+                range: "Доход может быть от 1 до 100"
+            }
+        }
+    });
+    if (f.valid())
         $.ajax({
             type: "POST",
             url: "/Home/SetShops",

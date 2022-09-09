@@ -18,6 +18,7 @@ namespace MyFirstWebApp.Models
         [Required(ErrorMessage = "Введите скидку")]
         [Range(1, 100, ErrorMessage = "Недопустимая скидка")]
         public int Sale { get; set; }
+        [Range(1, 100, ErrorMessage = "Недопустимый доход")]
         public int ShopIncome { get; set; }
         public virtual List<Cashier> Cashiers { get; set; }
     }
@@ -90,7 +91,9 @@ namespace MyFirstWebApp.Models
         public IEnumerable<SelectListItem> Users { get; set; }
         [JsonIgnore]
         public IEnumerable<Cashier> Cashiers { get; set; }
+        [Required]
         public string CashierName { get; set; }
+        [Range(1, 100, ErrorMessage = "Недопустимое значение")]
         public int Age { get; set; }
         public int CashierId { get; set; }
         public  int ShopModelId { get; set; }

@@ -108,6 +108,8 @@ namespace MyFirstWebApp.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("HelloView", "Account");
         }
+
+       
     }
 }
 

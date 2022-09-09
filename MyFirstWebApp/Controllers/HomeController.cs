@@ -49,7 +49,7 @@ namespace MyFirstWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("AddShops", new IndexViewModel());
+                return View("AddShops", new IndexViewModel(){ PageInfo = new PageInfo() { PageSize = 1 } });
             }
             var indexViewModel = GetPaggedShops(shopFiltrViwModel.Page, shopFiltrViwModel);
             indexViewModel.Filter = shopFiltrViwModel;
@@ -74,6 +74,7 @@ namespace MyFirstWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                
                 return BadRequest(ModelState);
             }
 
