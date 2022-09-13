@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyFirstWebApp.Models;
 
@@ -10,9 +11,11 @@ using MyFirstWebApp.Models;
 namespace MyFirstWebApp.Migrations
 {
     [DbContext(typeof(DemoContext))]
-    partial class DemoContextModelSnapshot : ModelSnapshot
+    [Migration("20220909145931_AddProfiles")]
+    partial class AddProfiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,9 +54,8 @@ namespace MyFirstWebApp.Migrations
 
             modelBuilder.Entity("MyFirstWebApp.Models.RequestProfile", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Parametrs")
                         .HasColumnType("TEXT");
@@ -67,7 +69,7 @@ namespace MyFirstWebApp.Migrations
                     b.Property<TimeSpan>("TotalTime")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProfileId");
 
                     b.ToTable("Profiles");
                 });

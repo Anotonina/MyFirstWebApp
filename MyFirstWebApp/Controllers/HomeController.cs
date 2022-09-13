@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyFirstWebApp.Models;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,13 +30,14 @@ namespace MyFirstWebApp.Controllers
         {
             DiagramsViewModel model = new DiagramsViewModel();
 
-            model.ShopData = _mapper.Map<List<ShopIncome>>(_context.Shops);          
-            
+            model.ShopData = _mapper.Map<List<ShopIncome>>(_context.Shops);
+            Log.Information("Hello Diagrams");
             return View(model);
+
         }
 
-        
 
+        
         public IActionResult AddShops(ShopFiltrViwModel shopFiltrViwModel)
         {
             

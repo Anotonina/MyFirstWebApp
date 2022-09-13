@@ -11,6 +11,7 @@ namespace MyFirstWebApp.Models
         public DbSet<Cashier> Cashiers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<RequestProfile> Profiles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
