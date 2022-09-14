@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace MyFirstWebApp.Models
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DemoContext : DbContext
     {
         public DbSet<ShopModel> Shops { get; set; }
@@ -46,4 +47,6 @@ namespace MyFirstWebApp.Models
         }  
 
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 }

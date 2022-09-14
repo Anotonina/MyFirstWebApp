@@ -11,7 +11,9 @@ using MyFirstWebApp.Models;
 namespace MyFirstWebApp.Controllers
 {
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class UsersController : BaseController
+
     {
         private readonly DemoContext _context;
 
@@ -161,4 +163,5 @@ namespace MyFirstWebApp.Controllers
           return _context.Users.Any(e => e.Id == id);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

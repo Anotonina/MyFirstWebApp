@@ -10,6 +10,8 @@ using System.Linq;
 
 namespace MyFirstWebApp.Controllers
 {
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
@@ -182,4 +184,6 @@ namespace MyFirstWebApp.Controllers
 
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 }

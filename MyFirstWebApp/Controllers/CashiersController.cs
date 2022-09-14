@@ -7,15 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyFirstWebApp.Models;
-
+using Serilog;
 
 namespace MyFirstWebApp.Controllers
 {
-   [Authorize(Roles = "admin")]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+    [Authorize(Roles = "admin")]
     public class CashiersController : BaseController
     {
-        private readonly DemoContext _context;
-        private readonly IMapper _mapper;
+        private protected readonly DemoContext _context;
+        private protected readonly IMapper _mapper;
 
         public CashiersController(DemoContext context, IMapper mapper)
         {
@@ -31,6 +33,7 @@ namespace MyFirstWebApp.Controllers
             model.Cashiers = _context.Cashiers.AsQueryable();
             if (id.HasValue)
             {
+                
                 model.Cashiers = model.Cashiers.Where(x => x.ShopModelId == id);
             }
             return View(model);
@@ -60,6 +63,7 @@ namespace MyFirstWebApp.Controllers
         {
             if (id == null || _context.Cashiers == null)
             {
+                Log.Warning("Details({Id}) NOT FOUND", id);
                 return NotFound();
             }
             var cashier = await _context.Cashiers
@@ -121,6 +125,7 @@ namespace MyFirstWebApp.Controllers
         {
             if (id == null || _context.Cashiers == null)
             {
+                Log.Warning("Edit({ Id}) NOT FOUND", id);
                 return NotFound();
             }
 
@@ -167,7 +172,7 @@ namespace MyFirstWebApp.Controllers
             }
             return View(cashierViewModel);
         }
-
+    
         // GET: Cashiers/Delete/5
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
@@ -214,4 +219,6 @@ namespace MyFirstWebApp.Controllers
             return _context.Cashiers.Any(e => e.CashierId == id);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 }

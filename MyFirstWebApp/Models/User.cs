@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyFirstWebApp.Models
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class User
     {
         [Key]
@@ -23,5 +24,6 @@ namespace MyFirstWebApp.Models
         public virtual ICollection<User> Users { get; set; } = new List<User>();
        
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 }

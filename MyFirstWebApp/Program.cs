@@ -12,23 +12,35 @@ using Serilog.Events;
 
 namespace MyFirstWebApp
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Program
     {
         public static void Main(string[] args)
         {
 
             Log.Logger = new LoggerConfiguration()
-           // минимальный уровень логирования - Debug
-           .MinimumLevel.Debug()
-           // Скрываем логи с уровнем ниже Warning для пространства имен Microsoft.AspNetCore*
-           .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-           // расширяем логируемые данные с помощью LogContext
-           .Enrich.FromLogContext()
-           // пишем логи в консоль с использованием шаблона
-           .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}")
-           .CreateLogger();
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File("log.txt")
+                .WriteTo.Seq("http://localhost:5341")
+                .CreateLogger();
 
-            CreateHostBuilder(args).Build().Run();
+            try
+            {
+                Log.Information("Starting web host");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -38,7 +50,7 @@ namespace MyFirstWebApp
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-       
-        
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 }

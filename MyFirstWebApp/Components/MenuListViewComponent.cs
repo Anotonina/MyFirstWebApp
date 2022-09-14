@@ -5,7 +5,9 @@ using System.Collections.Generic;
 
 namespace MyFirstWebApp.Components
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class MenuListViewComponent : ViewComponent
+
     {
         
         public IViewComponentResult Invoke()
@@ -30,3 +32,4 @@ namespace MyFirstWebApp.Components
         }
     }
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

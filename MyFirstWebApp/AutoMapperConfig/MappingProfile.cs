@@ -3,6 +3,7 @@ using MyFirstWebApp.Models;
 
 namespace MyFirstWebApp.AutoMapperConfig
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class MappingProfile : Profile
     {
         public MappingProfile()
@@ -14,6 +15,7 @@ namespace MyFirstWebApp.AutoMapperConfig
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.ShopName))
                 .ForMember(d => d.Income, o => o.MapFrom(s => s.ShopIncome));
         }
-
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 }

@@ -5,17 +5,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyFirstWebApp.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MyFirstWebApp.AutoMapperConfig;
-using Microsoft.AspNetCore.Authorization;
+using Serilog;
+using System.IO;
+using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.OpenApi.Models;
+using System;
 
 namespace MyFirstWebApp
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Startup
+
     {
         public Startup(IConfiguration configuration)
         {
@@ -39,6 +43,32 @@ namespace MyFirstWebApp
                 });
             services.AddAuthorization();
             services.AddMvc();
+            
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new() { Title = "MyFirstWebApp", Version = "v1" });
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+
+                //Set the comments path for the swagger json and ui.
+                var xmlPath = Path.Combine(basePath, "MyFirstWebApp.xml");
+                options.IncludeXmlComments(xmlPath);
+                options.AddSecurityDefinition("OAuth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        Implicit = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri($"localhost:44391/oauth2/default/v1/authorize"),
+                            TokenUrl = new Uri($"localhost:44391/oauth2/default/v1/token"),
+                            Scopes = new Dictionary<string, string>
+                            {
+                            { "openid", "test" },
+                            },
+                        }
+                    },
+                });
+            });
         }
 
 
@@ -56,11 +86,21 @@ namespace MyFirstWebApp
                 app.UseHsts();
             }
 
-            app.UseProfileTimeMiddleware();
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseSerilogRequestLogging();
+            // Enable middleware to serve generated Swagger as a JSON endpoint
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFirstWebApp v1"));
+
+            app.UseProfileTimeMiddleware();
+
+            app.UseHttpsRedirection();
+
             app.UseRouting();
+
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -74,7 +114,6 @@ namespace MyFirstWebApp
                
             });
             ApplyMigrations(db);
-            
         }
 
         private void ApplyMigrations(DbContext db)
@@ -82,4 +121,5 @@ namespace MyFirstWebApp
            db.Database.Migrate();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

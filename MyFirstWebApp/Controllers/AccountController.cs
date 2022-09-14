@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 
 namespace MyFirstWebApp.Controllers
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class AccountController : Controller
+
     {
 
         private readonly DemoContext db;
@@ -108,8 +110,7 @@ namespace MyFirstWebApp.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("HelloView", "Account");
         }
-
-       
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
 

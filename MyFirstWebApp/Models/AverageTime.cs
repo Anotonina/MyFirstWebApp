@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyFirstWebApp.Models
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class RequestProfile
     {
         [Key]
@@ -13,4 +14,6 @@ namespace MyFirstWebApp.Models
         public int TotalCount  { get; set; }
 
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 }

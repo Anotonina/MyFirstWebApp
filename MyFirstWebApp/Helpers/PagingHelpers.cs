@@ -9,6 +9,7 @@ using System.Text.Encodings.Web;
 namespace MyFirstWebApp.Helpers
 
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class PagingHelpers
     {
         public static HtmlString PageLinks (this IHtmlHelper html,
@@ -41,7 +42,5 @@ namespace MyFirstWebApp.Helpers
             }
         }
     }
-   
-
-    
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

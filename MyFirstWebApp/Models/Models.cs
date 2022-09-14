@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 namespace MyFirstWebApp.Models
 {
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ShopModel
     {
         public int Id { get; set; }
@@ -115,15 +116,16 @@ namespace MyFirstWebApp.Models
         //public List<string> ShopNames { get; set; }
         //public List<int> Income { get; set; }
         public List<ShopIncome> ShopData{ get; set; }
-}
+     }
     public class ShopIncome
     {
         public string Name { get; set; }
         public int Income { get; set; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 
-    }
+}
 
 
 

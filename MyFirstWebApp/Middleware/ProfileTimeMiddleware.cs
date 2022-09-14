@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace MyFirstWebApp.Models
 {
-       public static class UseProfileTimeMiddlewareExtension
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public static class UseProfileTimeMiddlewareExtension
+
     {
         public static IApplicationBuilder UseProfileTimeMiddleware(this IApplicationBuilder application)
         {
@@ -24,7 +26,6 @@ namespace MyFirstWebApp.Models
         private readonly RequestDelegate _next;
         private readonly DemoContext _context;
         static TimeSpan timeSpan = TimeSpan.Zero;
-        static int counter = 0;
         private string parametrs;
         public ProfileTimeMiddleware(RequestDelegate next, DemoContext db)
         {
@@ -48,7 +49,7 @@ namespace MyFirstWebApp.Models
             parametrs = context.Request.QueryString.ToString()?.Replace("?","");
 
             Debug.WriteLine($"URL: {url}");
-            Debug.WriteLine($": {parametrs}");
+            Debug.WriteLine($"parametrs: {parametrs}");
 
 
             await this._next(context);
@@ -82,6 +83,7 @@ namespace MyFirstWebApp.Models
             //Debug.WriteLine($"Total Time: {timeSpan}, Counter: {isUrl.TotalCount} ");
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
 
 
