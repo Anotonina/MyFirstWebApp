@@ -37,8 +37,7 @@ namespace MyFirstWebApp.Models
             Stopwatch watch = new Stopwatch();
             watch.Start();
             //read or create new if null DB get by host url and params
-            // string URL = context.Request.Query.ToString();
-            //  Debug.WriteLine($"URL: {URL}");
+           
             string url = context.Request.Path;
             url = url.ToLower();
             char s= url[url.Length-1];
@@ -80,7 +79,6 @@ namespace MyFirstWebApp.Models
             }
             //save data to db 
            
-            //Debug.WriteLine($"Total Time: {timeSpan}, Counter: {isUrl.TotalCount} ");
         }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

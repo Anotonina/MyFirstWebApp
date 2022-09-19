@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyFirstWebApp.Models;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using MyFirstWebApp.AutoMapperConfig;
 using Serilog;
@@ -14,6 +13,9 @@ using System.IO;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
 using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MyFirstWebApp
 {
@@ -32,18 +34,29 @@ namespace MyFirstWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddMvc();
             //services.AddScoped<Microsoft.EntityFrameworkCore.DbContext, DemoContext>();
             services.AddSingleton< DemoContext>();
             services.AddAutoMapper(typeof(MappingProfile));
-            services.AddAuthentication("Cookies")
+            services.AddAuthentication()
                 .AddCookie(options => 
                 {
                     options.LoginPath = new PathString("/Account/Login");
                     options.AccessDeniedPath = new PathString("/Account/Login");
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                     //ValidateIssuer = true,
+                     //ValidIssuer = Configuration["Jwt:Issuer"],
+                     //ValidateAudience = true,
+                     //ValidAudience = Configuration["Jwt:Audience"],
+                     //ValidateLifetime = true,
+                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                     //ValidateIssuerSigningKey = true,
+                    };
                 });
-            services.AddAuthorization();
-            services.AddMvc();
-            
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new() { Title = "MyFirstWebApp", Version = "v1" });
@@ -52,22 +65,25 @@ namespace MyFirstWebApp
                 //Set the comments path for the swagger json and ui.
                 var xmlPath = Path.Combine(basePath, "MyFirstWebApp.xml");
                 options.IncludeXmlComments(xmlPath);
-                options.AddSecurityDefinition("OAuth2", new OpenApiSecurityScheme
+
+                options.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
                 {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        Implicit = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri($"localhost:44391/oauth2/default/v1/authorize"),
-                            TokenUrl = new Uri($"localhost:44391/oauth2/default/v1/token"),
-                            Scopes = new Dictionary<string, string>
-                            {
-                            { "openid", "test" },
-                            },
-                        }
-                    },
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme,
+                    BearerFormat = "JWT",
+                    Description = "JWT Authorization header using the Bearer scheme.",
+                    In = ParameterLocation.Header,
                 });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                       new OpenApiSecurityScheme
+                       {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = JwtBearerDefaults.AuthenticationScheme }
+                       },
+                       new string[] {}
+                    }
+                 });
             });
         }
 
@@ -97,14 +113,16 @@ namespace MyFirstWebApp
 
             app.UseProfileTimeMiddleware();
 
+
             app.UseHttpsRedirection();
 
+            
+          
             app.UseRouting();
-
 
             app.UseAuthentication();
             app.UseAuthorization();
-       
+
             app.UseEndpoints(endpoints =>
             {
                 // определение маршрутов

@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyFirstWebApp.Models;
 using Serilog;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace MyFirstWebApp.Controllers
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     [Authorize(Roles = "admin")]
     public class CashiersController : BaseController
     {
@@ -44,10 +46,11 @@ namespace MyFirstWebApp.Controllers
         public IActionResult Create(int shopModelId)
         {
             CashierViewModel model = new CashierViewModel();
-            model.ShopModelId = shopModelId;
+            model.Cashier = new Cashier();
+            model.Cashier.ShopModelId = shopModelId;
             model.Users = _context.Users
                         .Select(user => new SelectListItem { Text = user.Email, Value = user.Id.ToString() });
-            if (shopModelId == 0)
+            if (shopModelId == 0 )
             {
                 model.Shops = _context.Shops
                                .Select(shop => new SelectListItem { Text = shop.ShopName, Value = shop.Id.ToString() });
@@ -68,7 +71,8 @@ namespace MyFirstWebApp.Controllers
             }
             var cashier = await _context.Cashiers
                 .FirstOrDefaultAsync(m => m.CashierId == id);
-            CashierViewModel model = _mapper.Map<CashierViewModel>(cashier);
+            CashierViewModel model= new CashierViewModel();
+            model.Cashier = cashier;
            // CashierViewModel model = new CashierViewModel() { Age = cashier.Age, CashierName = cashier.CashierName};
 
             if (cashier == null)
@@ -82,10 +86,11 @@ namespace MyFirstWebApp.Controllers
 
         public IActionResult PartialDetails(int id)
         {
-            Cashier c = _context.Cashiers.FirstOrDefault(c => c.CashierId == id);
-            CashierViewModel model = _mapper.Map<CashierViewModel>(c);
+            Cashier cashier = _context.Cashiers.FirstOrDefault(c => c.CashierId == id);
+            CashierViewModel model = new CashierViewModel();
+            model.Cashier = cashier;
 
-            if (c != null)
+            if (cashier != null)
                 return PartialView(model);
             return NotFound();
         }
@@ -96,9 +101,9 @@ namespace MyFirstWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CashierViewModel cashier)
+        public async Task<IActionResult> Create(CashierViewModel cashierViewModel)
         {
-            var isCashier = _context.Cashiers.FirstOrDefault(c => c.UserId ==cashier.UserId );
+            var isCashier = _context.Cashiers.FirstOrDefault(c => c.UserId == cashierViewModel.Cashier.UserId);
            
             if (isCashier!= null)
             {
@@ -107,15 +112,15 @@ namespace MyFirstWebApp.Controllers
             
             if (ModelState.IsValid)
             {
-                var cc = _mapper.Map<Cashier>(cashier);
+                var cashier = _mapper.Map<Cashier>(cashierViewModel.Cashier);
                // var cc = new Cashier() { Age = cashier.Age, CashierName = cashier.CashierName, ShopModelId = cashier.ShopModelId };
 
-                _context.Add(cc);
+                _context.Add(cashier);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
 
             }
-            return View(cashier);
+            return View(cashierViewModel);
         }
 
 
@@ -130,7 +135,8 @@ namespace MyFirstWebApp.Controllers
             }
 
             var cashier = await _context.Cashiers.FindAsync(id);
-            CashierViewModel model = _mapper.Map<CashierViewModel>(cashier);
+            CashierViewModel model = new CashierViewModel();
+            model.Cashier = cashier;
 
 
             if (cashier == null)
@@ -148,20 +154,20 @@ namespace MyFirstWebApp.Controllers
         public async Task<IActionResult> Edit(int id, CashierViewModel cashierViewModel)
         {
 
-            if (id != cashierViewModel.CashierId)
+            if (id != cashierViewModel.Cashier.CashierId)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                Cashier cashier = _context.Cashiers.Find(cashierViewModel.CashierId);
+                Cashier cashier = _context.Cashiers.Find(cashierViewModel.Cashier.CashierId);
                 
-                 cashier.User.Email = cashierViewModel.User.Email;
-                 cashier.User.Password = cashierViewModel.User.Password;
-                 cashier.Age = cashierViewModel.Age;
-                 cashier.CashierName = cashierViewModel.CashierName;
-                 cashier.ShopModelId = cashierViewModel.ShopModelId;
+                 cashier.User.Email = cashierViewModel.Cashier.User.Email;
+                 cashier.User.Password = cashierViewModel.Cashier.User.Password;
+                 cashier.Age = cashierViewModel.Cashier.Age;
+                 cashier.CashierName = cashierViewModel.Cashier.CashierName;
+                 cashier.ShopModelId = cashierViewModel.Cashier.ShopModelId;
 
 
                // _context.ChangeTracker.Clear();
@@ -184,7 +190,8 @@ namespace MyFirstWebApp.Controllers
 
             var cashier = await _context.Cashiers
                 .FirstOrDefaultAsync(m => m.CashierId == id);
-            CashierViewModel model = _mapper.Map<CashierViewModel>(cashier);
+            CashierViewModel model = new CashierViewModel();
+               model.Cashier =  cashier;
 
             if (cashier == null)
             {
