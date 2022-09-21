@@ -79,7 +79,7 @@ namespace MyFirstWebApp.Models
         public int CashierId { get; set; }
         [Required]
         public string CashierName { get; set; }
-        [Range(1, 100, ErrorMessage = "Недопустимое значение")]
+        [Range(18, 100, ErrorMessage = "Недопустимое значение")]
         public int Age { get; set; }
         public int ShopModelId { get; set; }
         [JsonIgnore]

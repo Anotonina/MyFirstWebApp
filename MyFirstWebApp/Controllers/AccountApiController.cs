@@ -36,11 +36,20 @@ namespace MyFirstWebApp.Controllers
         /// 
         /// </summary>
         /// <param name="loginModel"></param>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     POST
+        ///     {        
+        ///       "email": "admin@mail.ru",
+        ///       "password": "123456"    
+        ///     }
+        /// </remarks>
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
         /*[ValidateAntiForgeryToken]*/
-        public IActionResult Login([FromBody]LoginModel loginModel)
+        public IActionResult Login(LoginModel loginModel)
         {
             var user = Authenticate(loginModel);
              if (user != null)
@@ -62,7 +71,7 @@ namespace MyFirstWebApp.Controllers
             };
             user.Roles.ToList().ForEach(x => claims.Add(new Claim(ClaimTypes.Role, x.Name)));
 
-            var token = new JwtSecurityToken(_config["Jwt:Isuer "],
+            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                 _config["Jwt:Audience"],
                 claims,
                 expires: DateTime.Now.AddMinutes(15),

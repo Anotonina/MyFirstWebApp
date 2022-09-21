@@ -111,14 +111,19 @@ namespace MyFirstWebApp.Controllers
             {
                 
                 User u = _context.Users.Find(user.Id);
-                u.Email= user.Email;
-                
-                u.Password = user.Password;
+                var c = _context.Users.FirstOrDefault(x => x.Email == user.Email);
+                if (c == null)
+                {
+                    u.Email = user.Email;
 
-               // _context.ChangeTracker.Clear();
-                _context.Users.Update(u);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    u.Password = user.Password;
+
+                    // _context.ChangeTracker.Clear();
+                    _context.Users.Update(u);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                } else ModelState.AddModelError("", "Этот Email уже занят");
+
             }
             return View(user);
         }

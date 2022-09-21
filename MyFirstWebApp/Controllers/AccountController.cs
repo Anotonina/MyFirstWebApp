@@ -56,7 +56,7 @@ namespace MyFirstWebApp.Controllers
 
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
-
+            ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             return View(model);
         }
         [HttpGet]
@@ -87,9 +87,8 @@ namespace MyFirstWebApp.Controllers
 
                     return RedirectToAction("AddShops", "Home");
                 }
-                else
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
+            ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             return View(model);
         }
 

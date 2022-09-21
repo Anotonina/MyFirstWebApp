@@ -120,6 +120,11 @@ namespace MyFirstWebApp.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
+            cashierViewModel.Cashier.ShopModelId = 0;
+            cashierViewModel.Users = _context.Users
+                        .Select(user => new SelectListItem { Text = user.Email, Value = user.Id.ToString() });
+            cashierViewModel.Shops = _context.Shops
+                               .Select(shop => new SelectListItem { Text = shop.ShopName, Value = shop.Id.ToString() });
             return View(cashierViewModel);
         }
 
@@ -162,20 +167,24 @@ namespace MyFirstWebApp.Controllers
             if (ModelState.IsValid)
             {
                 Cashier cashier = _context.Cashiers.Find(cashierViewModel.Cashier.CashierId);
-                
-                 cashier.User.Email = cashierViewModel.Cashier.User.Email;
-                 cashier.User.Password = cashierViewModel.Cashier.User.Password;
-                 cashier.Age = cashierViewModel.Cashier.Age;
-                 cashier.CashierName = cashierViewModel.Cashier.CashierName;
-                 cashier.ShopModelId = cashierViewModel.Cashier.ShopModelId;
+                var c = _context.Users.FirstOrDefault(x => x.Email == cashierViewModel.Cashier.User.Email);
+                if (c == null)
+                {
+                    cashier.User.Email = cashierViewModel.Cashier.User.Email;
+                    cashier.User.Password = cashierViewModel.Cashier.User.Password;
+                    cashier.Age = cashierViewModel.Cashier.Age;
+                    cashier.CashierName = cashierViewModel.Cashier.CashierName;
+                    cashier.ShopModelId = cashierViewModel.Cashier.ShopModelId;
 
 
-               // _context.ChangeTracker.Clear();
-                _context.Cashiers.Update(cashier);
-                 await _context.SaveChangesAsync();
+                    // _context.ChangeTracker.Clear();
+                    _context.Cashiers.Update(cashier);
+                    await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
             }
+            ModelState.AddModelError("", "Этот Email уже занят");
             return View(cashierViewModel);
         }
     

@@ -16,6 +16,8 @@ using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Reflection;
 
 namespace MyFirstWebApp
 {
@@ -39,40 +41,50 @@ namespace MyFirstWebApp
             services.AddSingleton< DemoContext>();
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddAuthentication()
-                .AddCookie(options => 
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                 {
                     options.LoginPath = new PathString("/Account/Login");
                     options.AccessDeniedPath = new PathString("/Account/Login");
                 })
-                .AddJwtBearer(options =>
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                     //ValidateIssuer = true,
-                     //ValidIssuer = Configuration["Jwt:Issuer"],
-                     //ValidateAudience = true,
-                     //ValidAudience = Configuration["Jwt:Audience"],
-                     //ValidateLifetime = true,
-                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
-                     //ValidateIssuerSigningKey = true,
+                        //ValidateIssuer = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        //ValidateAudience = true,
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        //ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                        //ValidateIssuerSigningKey = true,
+                    };
+                    options.Events = new JwtBearerEvents()
+                    {
+                        OnAuthenticationFailed = (x) => {
+                            return System.Threading.Tasks.Task.CompletedTask;
+                        },
+                        OnForbidden = (x) => {
+                            return System.Threading.Tasks.Task.CompletedTask;
+                        }
                     };
                 });
+            services.AddAuthorization();
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new() { Title = "MyFirstWebApp", Version = "v1" });
                 var basePath = PlatformServices.Default.Application.ApplicationBasePath;
 
                 //Set the comments path for the swagger json and ui.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(basePath, "MyFirstWebApp.xml");
                 options.IncludeXmlComments(xmlPath);
 
-                options.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+                options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
                 {
-                    Type = SecuritySchemeType.ApiKey,
+                    Type = SecuritySchemeType.Http,
                     Scheme = JwtBearerDefaults.AuthenticationScheme,
                     BearerFormat = "JWT",
-                    Description = "JWT Authorization header using the Bearer scheme.",
-                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme."
                 });
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
